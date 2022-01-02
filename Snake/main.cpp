@@ -7,6 +7,7 @@
 #include "Snake.h"
 #include <iostream>
 #include <string>
+#include <thread>
 
 #define COLUMNS 40
 #define ROWS 40
@@ -18,6 +19,9 @@ short sDirection = RIGHT;
 
 // Điểm số
 int score = 0;
+
+// Bonus
+bool bonus = false;
 
 // Game Over
 bool gameOver = false;
@@ -60,7 +64,8 @@ void display_callback() {
 	glClear(GL_COLOR_BUFFER_BIT);
 	drawGrid();
 	drawSnake();
-	drawFood();
+	if (bonus == false) drawFood();
+	else drawBonus();
 	
 	// Kết thúc bản vẽ trên Buffer hiện tại, đẩy ra màn hình và chuyển qua Buffer còn lại
 	// Nhìn chung thì nó cũng có thể phần nào được coi như giống chức năng với Flush hoặc Finish
@@ -84,7 +89,7 @@ void reshape_callback(int w, int h) {
 	glViewport(0, 0, (GLsizei)w, (GLsizei)h);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glOrtho(0.0, COLUMNS + 5.0, 0.0, ROWS, -1.0, 1.0);
+	glOrtho(0.0, COLUMNS, 0.0, ROWS, -1.0, 1.0);
 	glMatrixMode(GL_MODELVIEW);
 }
 

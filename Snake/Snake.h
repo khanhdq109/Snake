@@ -15,6 +15,9 @@ extern short sDirection;
 // Điểm số
 extern int score;
 
+// Bonus
+extern bool bonus;
+
 // Game Over
 extern bool gameOver;
 
@@ -22,6 +25,8 @@ void initGrid(int, int);
 void drawGrid();
 void drawSnake();
 void drawFood();
-void random(int&, int&);
+void drawBonus();
+void randomFood(int&, int&);
+void randomBonus(int&, int&);
 
 #endif

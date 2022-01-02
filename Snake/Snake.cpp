@@ -6,9 +6,15 @@
 #endif
 #include "Snake.h"
 #include <ctime>
+#include <thread>
 
 int gridX, gridY;
 int snake_length = 5;
+
+// Bonus
+int Kclock = 1;
+int move = 0;
+bool isDraw = false;
 
 bool food = true; // Kiểm tra xem có vẽ lại Food khi Callback không
 int foodX, foodY; // Tọa độ của food
@@ -64,11 +70,28 @@ void drawSnake() {
 	else if (sDirection == LEFT) posX[0]--;
 
 	// Snake ăn food
-	if (posX[0] == foodX && posY[0] == foodY) {
+	if (bonus == false && posX[0] == foodX && posY[0] == foodY) {
 		score++;
 		snake_length++;
 		if (snake_length > MAX)
 			snake_length = MAX;
+		Kclock++;
+		Kclock %= 6;
+		if (Kclock == 0) {
+			bonus = true;
+			isDraw = true;
+		}
+		else food = true; // Vẽ lại food
+	}
+
+	// Snake ăn bonus
+	else if (bonus == true && (posX[0] >= foodX - 1 && posX[0] <= foodX + 1) && (posY[0] >= foodY - 1 && posY[0] <= foodY + 1)) {
+		score += 10;
+		snake_length++;
+		if (snake_length > MAX)
+			snake_length = MAX;
+		bonus = false;
+		Kclock = 1;
 		food = true; // Vẽ lại food
 	}
 
@@ -91,20 +114,65 @@ void drawSnake() {
 	}
 }
 
+void Timer() {
+	int count = 5;
+	for (int i = 0; i < 5; i++) {
+		if (!bonus)
+			return;
+		count--;
+		if (count == 0) {
+			bonus = false;
+			food = true;
+			return;
+		}
+		Sleep(1000);
+	}
+}
+
 // Vẽ food
 void drawFood() {
 	if (food)
-		random(foodX, foodY);
+		randomFood(foodX, foodY);
 	food = false;
 	glColor3f(1.0, 0.0, 0.0);
 	glRectf(foodX, foodY, foodX + 1, foodY + 1);
 }
 
+// Vẽ bonus
+void drawBonus() {
+	if (isDraw) {
+		std::thread c;
+		c = std::thread(Timer);
+		c.detach();
+		randomFood(foodX, foodY);
+		isDraw = false;
+	}
+	glColor3f(1.0, 0.0, 0.0);
+	if (move < 2) {
+		glRectf(foodX - 1, foodY - 1, foodX + 2, foodY + 2);
+		move++;
+	}
+	else if (move < 4) {
+		glRectf(foodX - 0.6, foodY - 0.6, foodX + 1.6, foodY + 1.6);
+		move++;
+		if (move == 4) move = 0;
+	}
+}
+
 // Sinh ngẫu nhiên food
-void random(int& x, int& y) {
+void randomFood(int& x, int& y) {
 	int maxX = gridX - 2, maxY = gridY - 2;
 	int min = 1;
 	srand(time(NULL));
 	x = min + rand() % (maxX - min);
 	y = min + rand() % (maxY - min);
+}
+
+// Sinh ngẫu nhiên bonus
+void randomBonus(int& x, int& y) {
+	int max = gridX - 3;
+	int min = 2;
+	srand(time(NULL));
+	x = min + rand() % (max - min);
+	y = min + rand() % (max - min);
 }
