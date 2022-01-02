@@ -10,19 +10,10 @@
 int gridX, gridY;
 int snake_length = 5;
 
-// Biến lưu hướng của snake
-short sDirection = RIGHT;
-
-// Điểm số
-extern int score;
-
-// Game Over
-extern bool gameOver;
-
 bool food = true; // Kiểm tra xem có vẽ lại Food khi Callback không
 int foodX, foodY; // Tọa độ của food
 
-int posX[100] = { 20,20,20,20,20 }, posY[100] = { 20, 19, 18, 17, 16 };
+int posX[100] = { 20,20,20,20,20 }, posY[100] = { 20,19,18,17,16 };
 
 void initGrid(int x, int y) {
 	gridX = x;
@@ -40,7 +31,7 @@ void drawGrid() {
 
 // Vẽ từng ô vuông
 void unit(int x, int y) {
-	// Thiết lập màu vẽ nếu viền thì màu đỏ, ở trong thì màu trắng
+	// Thiết lập màu vẽ nếu viền thì màu nâu cứt, ở trong thì màu trắng
 	if (x == 0 || y == 0 || x == gridX - 1 || y == gridY - 1) {
 		glLineWidth(3.0);
 		glColor3f(0.5, 0.5, 0.0);

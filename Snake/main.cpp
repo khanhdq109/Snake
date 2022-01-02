@@ -11,10 +11,10 @@
 #define COLUMNS 40
 #define ROWS 40
 
-#define FPS 5
+#define FPS 10
 
 // Biến hướng của snake
-extern short sDirection;
+short sDirection = RIGHT;
 
 // Điểm số
 int score = 0;
@@ -39,13 +39,14 @@ int main(int argc, char** argv) {
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
 
-	glutInitWindowSize(500, 500);
+	glutInitWindowSize(550, 550);
+	glutInitWindowPosition(450, 150);
 	glutCreateWindow("SNAKE GAME");
 
+	init();
 	glutDisplayFunc(display_callback);
 	glutReshapeFunc(reshape_callback);
 	glutTimerFunc(0, timer_callback, 0);
-	init();
 
 	// Xử lý sự kiện
 	glutSpecialFunc(keyboard_callback);
@@ -60,12 +61,21 @@ void display_callback() {
 	drawGrid();
 	drawSnake();
 	drawFood();
-	glutSwapBuffers();
+	
+	// Kết thúc bản vẽ trên Buffer hiện tại, đẩy ra màn hình và chuyển qua Buffer còn lại
+	// Nhìn chung thì nó cũng có thể phần nào được coi như giống chức năng với Flush hoặc Finish
+	glutSwapBuffers(); 
 
 	// Hiển thị thông báo khi Game Over
 	if (gameOver) {
-		const char str[10] = "GAME OVER";
-		MessageBox(NULL, L"GAME OVER", L"Snake Game", 0);
+		std::string str = "SCORE: ";
+		str += std::to_string(score);
+
+		LPWSTR ws = new wchar_t[str.size() + 1];
+		copy(str.begin(), str.end(), ws);
+		ws[str.size()] = 0;
+
+		MessageBox(NULL, ws, L"GAME OVER", 0);
 		exit(0);
 	}
 }
@@ -74,7 +84,7 @@ void reshape_callback(int w, int h) {
 	glViewport(0, 0, (GLsizei)w, (GLsizei)h);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glOrtho(0.0, COLUMNS, 0.0, ROWS, -1.0, 1.0);
+	glOrtho(0.0, COLUMNS + 5.0, 0.0, ROWS, -1.0, 1.0);
 	glMatrixMode(GL_MODELVIEW);
 }
 
