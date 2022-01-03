@@ -43,7 +43,7 @@ int main(int argc, char** argv) {
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
 
-	glutInitWindowSize(550, 550);
+	glutInitWindowSize(680, 550);
 	glutInitWindowPosition(450, 150);
 	glutCreateWindow("SNAKE GAME");
 
@@ -89,7 +89,7 @@ void reshape_callback(int w, int h) {
 	glViewport(0, 0, (GLsizei)w, (GLsizei)h);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glOrtho(0.0, COLUMNS, 0.0, ROWS, -1.0, 1.0);
+	glOrtho(0.0, COLUMNS + 15.0, 0.0, ROWS, -1.0, 1.0);
 	glMatrixMode(GL_MODELVIEW);
 }
 

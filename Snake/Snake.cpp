@@ -96,6 +96,14 @@ void drawSnake() {
 		}
 	}
 
+	// Kiểm tra điều kiện Game Over
+	// Chạm tường
+	Classic();
+	// Chạm thân
+	for (int i = 1; i < snake_length; i++)
+		if (posX[0] == posX[i] && posY[0] == posY[i])
+			gameOver = true;
+
 	// Snake ăn food
 	if (bonus == false && posX[0] == foodX && posY[0] == foodY) {
 		score += 5;
@@ -121,14 +129,6 @@ void drawSnake() {
 		Kclock = 1;
 		food = true; // Vẽ lại food
 	}
-
-	// Kiểm tra điều kiện Game Over
-	// Chạm tường
-	Classic();
-	// Chạm thân
-	for (int i = 1; i < snake_length; i++)
-		if (posX[0] == posX[i] && posY[0] == posY[i])
-			gameOver = true;
 }
 
 bool checkBody(int x, int y) {
@@ -165,9 +165,9 @@ void drawFood() {
 // Vẽ bonus
 void drawBonus() {
 	if (isDraw) {
-		std::thread c;
-		c = std::thread(Timer);
-		c.detach();
+		std::thread counter;
+		counter = std::thread(Timer);
+		counter.detach();
 		randomFood(foodX, foodY);
 		isDraw = false;
 	}
