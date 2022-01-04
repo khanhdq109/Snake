@@ -14,11 +14,21 @@
 
 #define FPS 10
 
+std::string fuck[5] = {
+	"\n~CON GA~",
+	"\nKHON THI SONG, NGU THI CHET, KHOC LOC CL :))",
+	"\nCHOI NGU VAY THI XOA CMN GAME DI BAN EIIIII",
+	"\n~TUOI LOZ BAN EI~",
+	"\n~NON VKL~"
+};
+
 // Biến hướng của snake
 short sDirection = RIGHT;
 
 // Điểm số
 int score = 0;
+int high_score[5] = { 0,0,0,0,0 };
+int rank = 5;
 
 // Bonus
 bool bonus = false;
@@ -37,13 +47,14 @@ void init() {
 	glClearColor(0.0, 0.0, 0.0, 1.0);
 
 	initGrid(COLUMNS, ROWS);
+	initHigh_Score();
 }
 
 int main(int argc, char** argv) {
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
 
-	glutInitWindowSize(680, 550);
+	glutInitWindowSize(756, 550);
 	glutInitWindowPosition(450, 150);
 	glutCreateWindow("SNAKE GAME");
 
@@ -64,6 +75,8 @@ void display_callback() {
 	glClear(GL_COLOR_BUFFER_BIT);
 	drawGrid();
 	drawSnake();
+	drawScore();
+	drawHigh_Score();
 	if (bonus == false) drawFood();
 	else drawBonus();
 	
@@ -75,7 +88,13 @@ void display_callback() {
 	if (gameOver) {
 		std::string str = "SCORE: ";
 		str += std::to_string(score);
-
+		if (rank == 5) {
+			srand(time(NULL));
+			int v = rand() % 5;
+			str += fuck[v];
+		}
+		else
+			str += "\nCongratulation! You got HIGH SCORE";
 		LPWSTR ws = new wchar_t[str.size() + 1];
 		copy(str.begin(), str.end(), ws);
 		ws[str.size()] = 0;
@@ -91,6 +110,7 @@ void reshape_callback(int w, int h) {
 	glLoadIdentity();
 	glOrtho(0.0, COLUMNS + 15.0, 0.0, ROWS, -1.0, 1.0);
 	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
 }
 
 void timer_callback(int) {
@@ -98,7 +118,7 @@ void timer_callback(int) {
 	glutTimerFunc(1000 / FPS, timer_callback, 0); //0,1 giây sau gọi lại hàm này, kiểu đệ quy
 }
 
-// Xử lý sự kiện chuột
+// Xử lý sự kiện bàn phím
 void keyboard_callback(int key, int, int) {
 	switch (key) {
 	case GLUT_KEY_UP:
